@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Folliq — Your hair health, decoded.</title>
+  <meta name="description" content="Professional hair and scalp analysis right from your phone. Take a photo, get answers, love your hair." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #7c3fa8;
+      --purple-deep: #4f1f72;
+      --purple-light: #ece3f3;
+      --cream: #faf7f4;
+      --dark: #1a1018;
+      --muted: #7b6f85;
+      --white: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 48px;
+      background: rgba(250, 247, 244, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(124, 63, 168, 0.08);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--purple);
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+
+    .nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover { color: var(--purple); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(ellipse, rgba(124, 63, 168, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--dark);
+      margin-bottom: 12px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--purple);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.7;
+      margin: 24px auto 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.6s;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.8s;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--purple);
+      color: #fff;
+      padding: 16px 32px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--purple-deep);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--purple);
+      padding: 16px 32px;
+      border-radius: 100px;
+      border: 1.5px solid rgba(124, 63, 168, 0.3);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--purple);
+      transform: translateY(-2px);
+    }
+
+    .coming-soon-badge {
+      font-size: 10px;
+      background: rgba(124,63,168,0.12);
+      color: var(--purple);
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* PHONE MOCKUP */
+    .phone-section {
+      padding: 40px 24px 100px;
+      display: flex;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1s;
+    }
+
+    .phone-frame {
+      width: 260px;
+      height: 520px;
+      background: var(--dark);
+      border-radius: 40px;
+      border: 8px solid #2d2233;
+      box-shadow:
+        0 60px 120px rgba(26, 16, 24, 0.25),
+        0 0 0 1px rgba(124, 63, 168, 0.2),
+        inset 0 0 40px rgba(124, 63, 168, 0.05);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 24px;
+    }
+
+    .phone-screen-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--purple);
+      letter-spacing: -1px;
+    }
+
+    .phone-scan-card {
+      width: 100%;
+      background: var(--purple);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .phone-scan-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .phone-scan-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .phone-scan-card-dark {
+      background: #2d2233;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 12px;
+      width: 80px; height: 20px;
+      background: var(--dark);
+      border-radius: 20px;
+    }
+
+    /* FEATURES */
+    .features {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--purple);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 300;
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 64px;
+      line-height: 1.15;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid rgba(124, 63, 168, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(124, 63, 168, 0.1);
+    }
+
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: var(--purple-light);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .feature-title {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .feature-text {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* HOW IT WORKS */
+    .how {
+      background: var(--dark);
+      padding: 100px 24px;
+      text-align: center;
+    }
+
+    .how .section-label { color: rgba(124,63,168,0.8); }
+
+    .how .section-title { color: #fff; margin-bottom: 64px; }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .step {
+      flex: 1;
+      min-width: 180px;
+      max-width: 220px;
+    }
+
+    .step-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 72px;
+      font-weight: 300;
+      color: rgba(124, 63, 168, 0.3);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .step-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .step-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* PRICING */
+    .pricing {
+      padding: 100px 24px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .pricing-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 48px;
+      border: 1px solid rgba(124, 63, 168, 0.15);
+      box-shadow: 0 20px 60px rgba(124, 63, 168, 0.08);
+    }
+
+    .pricing-badge {
+      display: inline-block;
+      background: var(--purple-light);
+      color: var(--purple);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .pricing-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .pricing-price {
+      font-size: 56px;
+      font-weight: 300;
+      color: var(--purple);
+      font-family: 'Cormorant Garamond', serif;
+      margin-bottom: 8px;
+    }
+
+    .pricing-price sup {
+      font-size: 24px;
+      vertical-align: super;
+    }
+
+    .pricing-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    .pricing-features li {
+      font-size: 14px;
+      color: var(--muted);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--purple-light);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--purple);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-link:hover { color: rgba(255,255,255,0.8); }
+
+    .footer-copy {
+      font-size: 12px;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .hero { padding: 100px 20px 60px; }
+      .features, .pricing { padding: 60px 20px; }
+      .how { padding: 60px 20px; }
+      .pricing-card { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-logo">folliq</a>
+    <a href="mailto:folliqcare@gmail.com" class="nav-link">Contact</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">Hair & Scalp Analysis App</p>
+    <h1 class="hero-title">Your hair health,<br><em>decoded.</em></h1>
+    <p class="hero-subtitle">Professional hair and scalp analysis right from your phone. Take a photo, get answers, love your hair.</p>
+    <div class="hero-cta">
+      <a href="#" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        App Store
+        <span class="coming-soon-badge">Coming Soon</span>
+      </a>
+      <a href="#" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.22.98.14l12.09-12.09L3.18.24C2.84.16 2.5.21 2.2.38 1.6.72 1.2 1.38 1.2 2.1v19.8c0 .72.4 1.38 1 1.72l.98-.06zM16.25 12l2.7 2.7-2.7 2.7L4.16 6.35l12.09 5.65zM3.18.24l13.07 11.76L3.18 23.76V.24z"/></svg>
+        Google Play
+        <span class="coming-soon-badge">Coming Soon</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- PHONE MOCKUP -->
+  <div class="phone-section">
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen-label">folliq</div>
+      <div class="phone-scan-card">
+        <div class="phone-scan-title">Scalp Scan</div>
+        <div class="phone-scan-sub">Scalp-focused analysis</div>
+      </div>
+      <div class="phone-scan-card phone-scan-card-dark">
+        <div class="phone-scan-title">Hair Scan</div>
+        <div class="phone-scan-sub">Hair-focused analysis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <p class="section-label">What Folliq Does</p>
+    <h2 class="section-title">Everything your hair<br>has been trying to tell you.</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔬</div>
+        <h3 class="feature-title">Scalp Analysis</h3>
+        <p class="feature-text">Check for flakes, oiliness, redness, and scalp health with a simple photo.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <h3 class="feature-title">Hair Analysis</h3>
+        <p class="feature-text">Understand damage, texture, porosity, and shine patterns in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3 class="feature-title">Lice vs Dandruff</h3>
+        <p class="feature-text">Not sure what you're seeing? Our dedicated screening tool helps you know for sure.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3 class="feature-title">Scan History</h3>
+        <p class="feature-text">Track your hair health over time and see what's working — and what isn't.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👤</div>
+        <h3 class="feature-title">Client Profiles</h3>
+        <p class="feature-text">Stylists can manage multiple clients, track formulas, and save service notes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💜</div>
+        <h3 class="feature-title">For Everyone</h3>
+        <p class="feature-text">Whether you're a licensed cosmetologist or just curious about your hair health.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <p class="section-label">How It Works</p>
+    <h2 class="section-title">Three steps to clarity.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">01</div>
+        <h3 class="step-title">Take a Photo</h3>
+        <p class="step-text">Capture your scalp or hair with your phone camera or upload from your library.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">02</div>
+        <h3 class="step-title">Get Your Analysis</h3>
+        <p class="step-text">Folliq analyzes your photo and delivers a detailed, easy-to-understand report.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">03</div>
+        <h3 class="step-title">Take Action</h3>
+        <p class="step-text">Follow personalized recommendations and track your progress over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" style="max-width: 900px;">
+    <p class="section-label">Simple Pricing</p>
+    <h2 class="section-title">Plans for<br>everyone.</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+      
+      <!-- PERSONAL -->
+      <div class="pricing-card">
+        <span class="pricing-badge">Personal</span>
+        <div class="pricing-price"><sup>$</sup>2.99</div>
+        <p class="pricing-note">One-time payment. Use forever.</p>
+        <ul class="pricing-features">
+          <li>5 free scans to get started</li>
+          <li>Unlimited scans after one-time unlock</li>
+          <li>Scalp & hair analysis</li>
+          <li>Lice vs Dandruff screening (always free)</li>
+          <li>Full scan history</li>
+        </ul>
+        <a href="#" class="btn-secondary" style="width:100%; justify-content:center;">
+          Coming Soon
+        </a>
+      </div>
+
+      <!-- PROFESSIONAL -->
+      <div class="pricing-card" style="border-color: var(--purple); box-shadow: 0 20px 60px rgba(124,63,168,0.15);">
+        <span class="pricing-badge" style="background: var(--purple); color: #fff;">Professional</span>
+        <div class="pricing-price"><sup>$</sup>12.99</div>
+        <p class="pricing-note">Per month. Built for licensed stylists.</p>
+        <ul class="pricing-features">
+          <li>Everything in Personal</li>
+          <li>Unlimited client profiles</li>
+          <li>Color formula tracking</li>
+          <li>Service notes & appointment history</li>
+          <li>Client photo history & progress tracking</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#" class="btn-primary" style="width:100%; justify-content:center;">
+          Coming Soon
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">folliq</div>
+    <div class="footer-links">
+      <a href="mailto:folliqcare@gmail.com" class="footer-link">Contact</a>
+      <a href="https://folliq.pages.dev/privacy" class="footer-link">Privacy Policy</a>
+      <a href="https://folliq.pages.dev/terms" class="footer-link">Terms of Use</a>
+    </div>
+    <p class="footer-copy">© 2026 Folliq. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
